@@ -1,0 +1,1 @@
+# Django-Practice : Pragmatic Pinterest
