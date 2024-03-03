@@ -1,0 +1,34 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ "feature/drf" ]
+  pull_request:
+    branches: [ "feature/drf" ]
+
+jobs:
+  pre-commit-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Check pending migrations
+      run: |
+        python manage.py makemigrations --check --dry-run
+        python manage.py migrate
+
+    - name: Run tests
+      run: |
+        python manage.py test
